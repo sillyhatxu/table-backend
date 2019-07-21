@@ -1,0 +1,54 @@
+{{ define "users/login.html" }}
+    <html>
+    <head>
+        {{template "partial/head"}}
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        </style>
+        <!-- Custom styles for this template -->
+        <link href="http://localhost:8080/assets/css/floating-labels.css" rel="stylesheet">
+        <script type="text/javascript">
+            function login() {
+                fetch("{{$.CTX}}/{{$.Enviroment}}/voucher_brand/update",{
+                    credentials: 'include',//send cookie
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "PUT",
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    var contentType = response.headers.get("Content-Type");
+                    if(contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    }
+                    throw new TypeError("Oops, we haven't got JSON!");
+                }).then(function(result) {
+                    alert(result.Msg);
+                    if(result.Ret === 0){
+                        window.location.href = "{{$.CTX}}/{{$.Enviroment}}/voucher_brand";
+                    }
+                }).catch(function(error){
+                    console.log(error);
+                });
+            }
+        </script>
+    </head>
+    <body>
+    {{template "partial/login-body.html"}}
+    </body>
+    </html>
+{{ end }}

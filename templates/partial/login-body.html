@@ -1,0 +1,15 @@
+{{ define "partial/login-body.html" }}
+    <form class="form-signin">
+        <div class="text-center mb-4">
+            <h1 class="h3 mb-3 font-weight-normal">在线填表系统</h1>
+        </div>
+
+        <div class="form-label-group">
+            <input type="email" id="inputEmail" class="form-control" placeholder="身份证号" required autofocus>
+            <label for="inputEmail">请输入身份证号</label>
+        </div>
+
+        <button type="button" class="btn btn-lg btn-primary btn-block" onclick="login()">登录</button>
+        <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2020</p>
+    </form>
+{{ end }}
