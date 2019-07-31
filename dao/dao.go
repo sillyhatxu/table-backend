@@ -7,13 +7,13 @@ import (
 )
 
 const insertSQL = `
-insert into unknown_table (id, identity, content, status, table_type)
-values (?, ?, ?, ?, ?)
+insert into unknown_table (id, content, status, table_type)
+values (?, ?, ?, ?)
 `
 
 func Insert(ut *model.UnknownTable) error {
 	logrus.Infof("Insert UnknownTable:%+v", ut)
-	_, err := mysqlclient.Client.Insert(insertSQL, ut.Id, ut.Identity, ut.Content, ut.Status, ut.TableType)
+	_, err := mysqlclient.Client.Insert(insertSQL, ut.Id, ut.Content, ut.Status, ut.TableType)
 	return err
 }
 
@@ -49,4 +49,18 @@ func FindById(id string) (*model.UnknownTable, error) {
 		return nil, err
 	}
 	return &ut, nil
+}
+
+const findByTableTypeSQL = `
+select * from unknown_table where id = ?
+`
+
+func FindByTableType(tableType int) ([]model.UnknownTable, error) {
+	logrus.Infof("FindByTableType:%v", tableType)
+	var array []model.UnknownTable
+	err := mysqlclient.Client.FindOneRecord(findByTableTypeSQL, &array, tableType)
+	if err != nil {
+		return nil, err
+	}
+	return array, nil
 }

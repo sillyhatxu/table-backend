@@ -1,6 +1,16 @@
 package dto
 
-type UnknownTable struct {
+import "fmt"
+
+type AddDTO struct {
+	Content string `json:"content"`
+}
+
+func (add AddDTO) String() string {
+	return fmt.Sprintf("AddDTO{ content: %s }", add.Content)
+}
+
+type TableOne struct {
 	UserName            string `json:"user_name"`
 	Gender              string `json:"gender"`
 	Age                 string `json:"age"`

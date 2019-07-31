@@ -22,12 +22,60 @@
         <link href="http://localhost:8080/assets/css/floating-labels.css" rel="stylesheet">
         <script type="text/javascript">
             function login() {
-
+                const data = {};
+                data["login_name"] = document.getElementById("loginName").value;
+                data["password"] = document.getElementById("password").value;
+                fetch('{{$.ctx}}' + "/login", {
+                    credentials: 'include',//send cookie
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "POST",
+                    body: JSON.stringify(data)
+                }).then(function (response) {
+                    var contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    }
+                    throw new TypeError("Oops, we haven't got JSON!");
+                }).then(function (result) {
+                    if (result.code === 1) {
+                        window.location.href = "{{$.ctx}}/managers/table-one";
+                    } else {
+                        alert(result.Msg);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
             }
         </script>
     </head>
     <body>
-    {{template "partial/login-body.html"}}
+    <form class="form-signin">
+        <div class="text-center mb-4">
+            <h1 class="h3 mb-3 font-weight-normal">在线填表系统</h1>
+        </div>
+        <div class="form-label-group">
+            <input type="text" id="loginName" class="form-control" placeholder="账号" required autofocus value="{{ .data.Data.LoginName }}">
+            <label for="inputLoginName">请输入账号</label>
+        </div>
+        {{/*<div class="form-label-group">*/}}
+        {{/*<h3>{{ .ctx }}</h3>*/}}
+        {{/*<h3>{{ .environment }}</h3>*/}}
+        {{/*<h3>{{ .data.Code }}</h3>*/}}
+        {{/*<h3>{{ .data.Msg }}</h3>*/}}
+        {{/*<h3>{{ .data.Data }}</h3>*/}}
+        {{/*<h3>{{ .data.Data.LoginName }}</h3>*/}}
+        {{/*<h3>{{ .data.Data.Password }}</h3>*/}}
+        {{/*</div>*/}}
+        <div class="form-label-group">
+            <input type="password" id="password" class="form-control" placeholder="密码" required autofocus value="{{ .data.Data.Password }}">
+            <label for="inputPassword">请输入密码</label>
+        </div>
+        <button type="button" class="btn btn-lg btn-primary btn-block" onclick="login()">登录</button>
+        <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2020</p>
+    </form>
     </body>
     </html>
 {{ end }}
