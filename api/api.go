@@ -36,6 +36,9 @@ func SetupRouter() *gin.Engine {
 		"linefeed": func(index, line int) bool {
 			return (index+1)%line == 0
 		},
+		"add": func(x, y int) int {
+			return x + y
+		},
 	})
 	router.LoadHTMLGlob("templates/**/*")
 	router.GET("/health", func(c *gin.Context) {
@@ -47,6 +50,7 @@ func SetupRouter() *gin.Engine {
 	{
 		managerGroup.GET("/table-test", tableTest)
 		managerGroup.GET("/table-one", tableOne)
+		managerGroup.GET("/table-one2", tableOne2)
 		managerGroup.POST("/table-one/add", addTableOne)
 		managerGroup.POST("/table-one/update", updateTableOne)
 		managerGroup.POST("/table-one/export", export)
@@ -89,6 +93,17 @@ func tableOne(context *gin.Context) {
 	}
 	context.HTML(
 		http.StatusOK, "managers/tableOne.html",
+		response.HTMLSuccess(array, nil),
+	)
+}
+func tableOne2(context *gin.Context) {
+	array, err := service.TableOneList()
+	if err != nil {
+		context.JSON(http.StatusOK, response.ServerError(nil, err.Error(), nil))
+		return
+	}
+	context.HTML(
+		http.StatusOK, "managers/tableOne2.html",
 		response.HTMLSuccess(array, nil),
 	)
 }

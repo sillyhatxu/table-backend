@@ -14,6 +14,7 @@ const (
 
 type UnknownTable struct {
 	Id               string    `json:"id" mapstructure:"id"`
+	Identification   string    `json:"identification" mapstructure:"identification"`
 	TableType        int       `json:"table_type" mapstructure:"table_type"`
 	Status           int       `json:"status" mapstructure:"status"`
 	Content          string    `json:"content" mapstructure:"content"`

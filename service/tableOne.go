@@ -73,10 +73,21 @@ func TableOneAdd(addDTO dto.AddDTO) error {
 	if err != nil {
 		return err
 	}
+	if table.Identity == "" {
+		return fmt.Errorf("身份证号不能为空")
+	}
+	checkArray, err := dao.FindByIdentificationTableType(table.Identity, model.TableTypeOne)
+	if err != nil {
+		return err
+	}
+	if len(checkArray) > 0 {
+		return fmt.Errorf("这条记录已经录入了")
+	}
 	return dao.Insert(&model.UnknownTable{
-		Id:        uuid.V4Upper32(),
-		TableType: model.TableTypeOne,
-		Status:    model.StatusEnable,
-		Content:   string(contentJSON),
+		Id:             uuid.V4Upper32(),
+		Identification: table.Identity,
+		TableType:      model.TableTypeOne,
+		Status:         model.StatusEnable,
+		Content:        string(contentJSON),
 	})
 }

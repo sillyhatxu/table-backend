@@ -7,13 +7,13 @@ import (
 )
 
 const insertSQL = `
-insert into unknown_table (id, content, status, table_type)
-values (?, ?, ?, ?)
+insert into unknown_table (id, identification, content, status, table_type)
+values (?, ?, ?, ?, ?)
 `
 
 func Insert(ut *model.UnknownTable) error {
 	logrus.Infof("Insert UnknownTable:%+v", ut)
-	_, err := mysqlclient.Client.Insert(insertSQL, ut.Id, ut.Content, ut.Status, ut.TableType)
+	_, err := mysqlclient.Client.Insert(insertSQL, ut.Id, ut.Identification, ut.Content, ut.Status, ut.TableType)
 	return err
 }
 
@@ -59,6 +59,20 @@ func FindByTableType(tableType int) ([]model.UnknownTable, error) {
 	logrus.Infof("FindByTableType:%v", tableType)
 	var array []model.UnknownTable
 	err := mysqlclient.Client.FindList(findByTableTypeSQL, &array, tableType)
+	if err != nil {
+		return nil, err
+	}
+	return array, nil
+}
+
+const findByIdentificationAndTableTypeSQL = `
+select * from unknown_table where identification = ? and table_type = ? and status = 1 order by last_modified_time desc
+`
+
+func FindByIdentificationTableType(identification string, tableType int) ([]model.UnknownTable, error) {
+	logrus.Infof("FindByIdentificationTableType; identification: %s; tableType: %d", identification, tableType)
+	var array []model.UnknownTable
+	err := mysqlclient.Client.FindList(findByIdentificationAndTableTypeSQL, &array, identification, tableType)
 	if err != nil {
 		return nil, err
 	}

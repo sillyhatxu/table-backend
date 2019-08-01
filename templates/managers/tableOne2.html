@@ -1,0 +1,145 @@
+{{ define "managers/tableOne2.html" }}
+    <html>
+    <head>
+        {{template "partial/head"}}
+        <link href="{{ ctx }}/assets/css/dashboard.css" rel="stylesheet">
+        <link href="{{ ctx }}/assets/css/pricing.css" rel="stylesheet">
+        {{/*<script src="{{ ctx }}/assets/js/dashboard.js"></script>*/}}
+        <script type="text/javascript">
+            function add() {
+                const data = {};
+                data["content"] = document.getElementById("addContent").value;
+                fetch('{{ ctx }}' + "/managers/table-one/add", {
+                    credentials: 'include',//send cookie
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "POST",
+                    body: JSON.stringify(data)
+                }).then(function (response) {
+                    var contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    }
+                    throw new TypeError("Oops, we haven't got JSON!");
+                }).then(function (result) {
+                    if (result.code === 1) {
+                        window.location.href = "{{ ctx }}/managers/table-one";
+                    } else {
+                        alert(result.message);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+
+            function newline(index) {
+                return (index + 1) % 2 === 0
+            }
+        </script>
+    </head>
+    <body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">表格</a>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            {{template "partial/table-nav"}}
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+                    <h5 class="display-4">超龄，逾期申请表</h5>
+                    <p class="lead">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModalLong">
+                            新增记录
+                        </button>
+                        <button type="button" class="btn btn-link">清空表格</button>
+                    </p>
+                </div>
+
+                <div class="container">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">姓名</th>
+                            <th scope="col">性别</th>
+                            <th scope="col">年龄</th>
+                            <th scope="col">学历</th>
+                            <th scope="col">身份证号</th>
+                            <th scope="col">手机号</th>
+                            <th scope="col">邮箱号</th>
+                            <th scope="col">身份证地址</th>
+                            <th scope="col">工作单位</th>
+                            <th scope="col">单位地址</th>
+                            <th scope="col">单位电话</th>
+                            <th scope="col">申请原因</th>
+                            <th scope="col">银行名称</th>
+                            <th scope="col">收卡地址</th>
+                            <th scope="col">申请时间</th>
+                            <th scope="col">推荐人姓名</th>
+                            <th scope="col">推荐人手机号码</th>
+                            <th scope="col">备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{range $index,$element := .data}}
+                            <tr>
+                                <th scope="row">{{add $index 1}}</th>
+                                <td>{{$element.UserName}}</td>
+                                <td>{{$element.Gender}}</td>
+                                <td>{{$element.Age}}</td>
+                                <td>{{$element.Education}}</td>
+                                <td>{{$element.Identity}}</td>
+                                <td>{{$element.PhoneNumber}}</td>
+                                <td>{{$element.Email}}</td>
+                                <td>{{$element.IdentityAddress}}</td>
+                                <td>{{$element.Work}}</td>
+                                <td>{{$element.WorkAddress}}</td>
+                                <td>{{$element.WorkPhone}}</td>
+                                <td>{{$element.ReasonForApplying}}</td>
+                                <td>{{$element.BankName}}</td>
+                                <td>{{$element.ReceiveAddress}}</td>
+                                <td>{{$element.ApplyTime}}</td>
+                                <td>{{$element.ReferrerName}}</td>
+                                <td>{{$element.ReferrerPhoneNumber}}</td>
+                                <td>{{$element.Remark}}</td>
+                            </tr>
+                        {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="addModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">新增记录</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <textarea class="form-control" id="addContent" rows="15"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="add()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+{{ end }}

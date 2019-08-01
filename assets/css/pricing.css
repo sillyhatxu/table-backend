@@ -7,6 +7,10 @@ html {
   }
 }
 
+li {
+  text-indent: 30%;
+}
+
 .container {
   max-width: 960px;
 }

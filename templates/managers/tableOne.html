@@ -5,6 +5,11 @@
         <link href="{{ ctx }}/assets/css/dashboard.css" rel="stylesheet">
         <link href="{{ ctx }}/assets/css/pricing.css" rel="stylesheet">
         {{/*<script src="{{ ctx }}/assets/js/dashboard.js"></script>*/}}
+        <style>
+            .input-group {
+                line-height:50%;
+            }
+        </style>
         <script type="text/javascript">
             function add() {
                 const data = {};
@@ -33,10 +38,6 @@
                     console.log(error);
                 });
             }
-
-            function newline(index) {
-                return (index + 1) % 2 === 0
-            }
         </script>
     </head>
     <body>
@@ -49,7 +50,6 @@
             {{template "partial/table-nav"}}
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-                    <h5 class="display-4">超龄，逾期申请表</h5>
                     <p class="lead">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModalLong">
                             新增记录
@@ -61,182 +61,128 @@
                 <div class="container">
                     <div class="card-deck mb-3 text-center">
                         {{range $index,$element := .data}}
-                            <div class="card mb-6 shadow-sm">
-                                <div class="card-header">
-                                    <h4 class="my-0 font-weight-normal">L: 超龄、逾期申请表:</h4>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-unstyled mt-3 mb-4">
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">姓名</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.UserName}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">性别</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.Gender}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">年龄</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.Age}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">学历</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.Education}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">身份证号</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.Identity}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">手机号</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.PhoneNumber}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">邮箱</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.Email}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">身份证地址</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.IdentityAddress}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">工作单位</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.Work}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">单位地址</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.WorkAddress}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">单位电话</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.WorkPhone}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">申请原因</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.ReasonForApplying}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">银行名称</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.BankName}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">收卡地址</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.ReceiveAddress}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">申请时间</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.ApplyTime}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">推荐人姓名</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.ReferrerName}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">推荐人手机号码</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.ReferrerPhoneNumber}}">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">备注</span>
-                                                </div>
-                                                <input type="text" aria-label="First name" class="form-control"
-                                                       value="{{$element.Remark}}">
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">修改</button>
-                                </div>
+                        <div class="card mb-6 shadow-sm">
+                            {{/*<div class="card-header">*/}}
+                                {{/*<h4 class="my-0 font-weight-normal">L: 超龄、逾期申请表:</h4>*/}}
+                            {{/*</div>*/}}
+                            <div class="card-body">
+                                <ul class="list-unstyled mt-3 mb-4">
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">姓名:</p>
+                                            <p class="text-left text-primary">{{$element.UserName}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">性别:</p>
+                                            <p class="text-left text-primary">{{$element.Gender}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">年龄:</p>
+                                            <p class="text-left text-primary">{{$element.Age}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">学历:</p>
+                                            <p class="text-left text-primary">{{$element.Education}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">身份证号:</p>
+                                            <p class="text-left text-primary">{{$element.Identity}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">手机号:</p>
+                                            <p class="text-left text-primary">{{$element.PhoneNumber}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">邮箱:</p>
+                                            <p class="text-left text-primary">{{$element.Email}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">身份证地址:</p>
+                                            <p class="text-left text-primary">{{$element.IdentityAddress}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">工作单位:</p>
+                                            <p class="text-left text-primary">{{$element.Work}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">单位地址:</p>
+                                            <p class="text-left text-primary">{{$element.WorkAddress}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">单位电话:</p>
+                                            <p class="text-left text-primary">{{$element.WorkPhone}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">申请原因:</p>
+                                            <p class="text-left text-primary">{{$element.ReasonForApplying}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">银行名称:</p>
+                                            <p class="text-left text-primary">{{$element.BankName}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">收卡地址:</p>
+                                            <p class="text-left text-primary">{{$element.ReceiveAddress}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">申请时间:</p>
+                                            <p class="text-left text-primary">{{$element.ApplyTime}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">推荐人姓名:</p>
+                                            <p class="text-left text-primary">{{$element.ReferrerName}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">推荐人手机号码:</p>
+                                            <p class="text-left text-primary">{{$element.ReferrerPhoneNumber}}</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <p class="text-right">备注:</p>
+                                            <p class="text-left text-primary">{{$element.Remark}}</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <button type="button" class="btn btn-lg btn-block btn-outline-primary">修改</button>
                             </div>
-                            {{ if linefeed $index 2}}
-                                </div>
-                                 <div class="card-deck mb-3 text-center">
-                            {{end}}
+                        </div>
+                        {{ if linefeed $index 2}}
+                    </div>
+                    <div class="card-deck mb-3 text-center">
+                        {{end}}
                         {{end}}
                     </div>
                 </div>
