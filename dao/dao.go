@@ -52,7 +52,7 @@ func FindById(id string) (*model.UnknownTable, error) {
 }
 
 const findByTableTypeSQL = `
-select * from unknown_table where table_type = ? order by last_modified_time desc
+select * from unknown_table where table_type = ? and status = 1 order by last_modified_time desc
 `
 
 func FindByTableType(tableType int) ([]model.UnknownTable, error) {
