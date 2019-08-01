@@ -1,0 +1,18 @@
+{{ define "managers/tableTest.html" }}
+    <html>
+    <head>
+        {{template "partial/head"}}
+
+        <link href="{{ ctx }}/assets/css/dashboard.css" rel="stylesheet">
+        <link href="{{ ctx }}/assets/css/pricing.css" rel="stylesheet">
+        <link href="{{ ctx }}/assets/js/dashboard.js" rel="stylesheet">
+    </head>
+    <body>
+    <div class="container-fluid">
+        <div class="row">{{.now}}</div>
+        <div class="row">{{.now | formatAsDate}}</div>
+        <div class="row">{{ ctx }}</div>
+    </div>
+    </body>
+    </html>
+{{ end }}

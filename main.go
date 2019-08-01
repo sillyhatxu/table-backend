@@ -5,7 +5,6 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/sillyhatxu/convenient-utils/envconfig"
 	"github.com/sillyhatxu/convenient-utils/mysqlclient"
-	"github.com/sillyhatxu/convenient-utils/response"
 	"github.com/sillyhatxu/table-backend/api"
 	"github.com/sillyhatxu/table-backend/config"
 	"github.com/sirupsen/logrus"
@@ -34,9 +33,6 @@ func init() {
 
 func main() {
 	mysqlclient.InitialDBClient(config.Conf.MysqlDB.DataSource, config.Conf.MysqlDB.MaxIdleConns, config.Conf.MysqlDB.MaxOpenConns)
-	api.InitialAPI(&response.PageContext{
-		Host:        "http://localhost:8080",
-		Environment: "dev",
-	})
+	api.InitialAPI()
 	logrus.Info("---------- Project Close ----------")
 }
