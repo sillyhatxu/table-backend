@@ -24,14 +24,6 @@ func TableOneList() ([]dto.TableOne, error) {
 			return nil, err
 		}
 		resultArray = append(resultArray, table)
-		for i := 0; i < 12; i++ {
-			var table dto.TableOne
-			err := json.Unmarshal([]byte(ut.Content), &table)
-			if err != nil {
-				return nil, err
-			}
-			resultArray = append(resultArray, table)
-		}
 	}
 	return resultArray, nil
 }
@@ -82,7 +74,6 @@ func TableOneAdd(addDTO dto.AddDTO) error {
 		return err
 	}
 	return dao.Insert(&model.UnknownTable{
-
 		Id:        uuid.V4Upper32(),
 		TableType: model.TableTypeOne,
 		Status:    model.StatusEnable,

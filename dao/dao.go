@@ -52,13 +52,13 @@ func FindById(id string) (*model.UnknownTable, error) {
 }
 
 const findByTableTypeSQL = `
-select * from unknown_table where id = ?
+select * from unknown_table where table_type = ? order by last_modified_time desc
 `
 
 func FindByTableType(tableType int) ([]model.UnknownTable, error) {
 	logrus.Infof("FindByTableType:%v", tableType)
 	var array []model.UnknownTable
-	err := mysqlclient.Client.FindOneRecord(findByTableTypeSQL, &array, tableType)
+	err := mysqlclient.Client.FindList(findByTableTypeSQL, &array, tableType)
 	if err != nil {
 		return nil, err
 	}
