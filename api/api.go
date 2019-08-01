@@ -19,16 +19,10 @@ func InitialAPI() {
 	router.Run(config.Conf.Http.Listen)
 }
 
-func formatAsDate(t time.Time) string {
-	year, month, day := t.Date()
-	return fmt.Sprintf("%d%02d/%02d", year, month, day)
-}
-
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 	router.Static("/assets", "./assets")
-	router.LoadHTMLGlob("templates/**/*")
-	var funcName = template.FuncMap{
+	router.SetFuncMap(template.FuncMap{
 		"ctx": func() string {
 			return "http://localhost:8080"
 		},
@@ -39,12 +33,11 @@ func SetupRouter() *gin.Engine {
 			year, month, day := t.Date()
 			return fmt.Sprintf("%d%02d/%02d", year, month, day)
 		},
-	}
-	if tmpl, err := template.New("name").Funcs(funcName).ParseGlob("templates/**/*.html"); err == nil {
-		router.SetHTMLTemplate(tmpl)
-	} else {
-		logrus.Panic(err)
-	}
+		"linefeed": func(index, line int) bool {
+			return (index+1)%line == 0
+		},
+	})
+	router.LoadHTMLGlob("templates/**/*")
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"code": response.Success, "message": "OK"})
 	})
@@ -79,7 +72,12 @@ func tableTest(context *gin.Context) {
 	}
 	context.HTML(
 		http.StatusOK, "managers/tableTest.html",
-		response.HTMLSuccess(array, nil),
+		response.HTMLSuccess(array, map[string]interface{}{
+			"now": time.Now(),
+			"testFun": func() string {
+				return "dev"
+			},
+		}),
 	)
 }
 

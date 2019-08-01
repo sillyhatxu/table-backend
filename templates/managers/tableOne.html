@@ -4,7 +4,7 @@
         {{template "partial/head"}}
         <link href="{{ ctx }}/assets/css/dashboard.css" rel="stylesheet">
         <link href="{{ ctx }}/assets/css/pricing.css" rel="stylesheet">
-        <link href="{{ ctx }}/assets/js/dashboard.js" rel="stylesheet">
+        {{/*<script src="{{ ctx }}/assets/js/dashboard.js"></script>*/}}
         <script type="text/javascript">
             function add() {
                 const data = {};
@@ -37,7 +37,7 @@
             function newline(index) {
                 return (index + 1) % 2 === 0
             }
-         </script>
+        </script>
     </head>
     <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
@@ -52,7 +52,7 @@
                     <h5 class="display-4">超龄，逾期申请表</h5>
                     <p class="lead">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModalLong">
-                            新增记录{{.now}} {{ .now | formatAsDate }}
+                            新增记录
                         </button>
                         <button type="button" class="btn btn-link">清空表格</button>
                     </p>
@@ -61,10 +61,9 @@
                 <div class="container">
                     <div class="card-deck mb-3 text-center">
                         {{range $index,$element := .data}}
-                            <div class="card mb-4 shadow-sm">
+                            <div class="card mb-6 shadow-sm">
                                 <div class="card-header">
                                     <h4 class="my-0 font-weight-normal">L: 超龄、逾期申请表:</h4>
-                                    {{/*<h4 class="my-0 font-weight-normal">L: 超龄、逾期申请表: {{add 1 $.index }}</h4>*/}}
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-unstyled mt-3 mb-4">
@@ -233,31 +232,12 @@
                                     </ul>
                                     <button type="button" class="btn btn-lg btn-block btn-outline-primary">修改</button>
                                 </div>
-                                {{/*{{ if ($.index add 1) % 2 == 0}}*/}}
-                                {{/*</div>*/}}
-                                {{/*<div class="card mb-4 shadow-sm">*/}}
-                                {{/*{{end}}*/}}
                             </div>
+                            {{ if linefeed $index 2}}
+                                </div>
+                                 <div class="card-deck mb-3 text-center">
+                            {{end}}
                         {{end}}
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-header">
-                                <h4 class="my-0 font-weight-normal">Free</h4>
-                            </div>
-                            <div class="card-body">
-                                <h1 class="card-title pricing-card-title">$0
-                                    <small class="text-muted">/ mo</small>
-                                </h1>
-                                <ul class="list-unstyled mt-3 mb-4">
-                                    <li>10 users included</li>
-                                    <li>2 GB of storage</li>
-                                    <li>Email support</li>
-                                    <li>Help center access</li>
-                                </ul>
-                                <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for
-                                    free
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </main>

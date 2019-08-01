@@ -24,6 +24,14 @@ func TableOneList() ([]dto.TableOne, error) {
 			return nil, err
 		}
 		resultArray = append(resultArray, table)
+		for i := 0; i < 12; i++ {
+			var table dto.TableOne
+			err := json.Unmarshal([]byte(ut.Content), &table)
+			if err != nil {
+				return nil, err
+			}
+			resultArray = append(resultArray, table)
+		}
 	}
 	return resultArray, nil
 }

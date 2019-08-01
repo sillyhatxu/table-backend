@@ -5,13 +5,20 @@
 
         <link href="{{ ctx }}/assets/css/dashboard.css" rel="stylesheet">
         <link href="{{ ctx }}/assets/css/pricing.css" rel="stylesheet">
-        <link href="{{ ctx }}/assets/js/dashboard.js" rel="stylesheet">
+        <script src="{{ ctx }}/assets/js/dashboard.js"></script>
     </head>
     <body>
     <div class="container-fluid">
-        <div class="row">{{.now}}</div>
-        <div class="row">{{.now | formatAsDate}}</div>
+        <div class="row">{{.extra.now}}</div>
+        <div class="row">{{.extra.now | formatAsDate}}</div>
         <div class="row">{{ ctx }}</div>
+        <div class="row">{{ linefeed 0 2 }}</div>
+        <div class="row">{{ linefeed 1 2 }}</div>
+        <div class="row">{{ linefeed 2 2 }}</div>
+        <div class="row">{{ linefeed 3 2 }}</div>
+        <div class="row">{{ linefeed 4 2 }}</div>
+        <div class="row">{{ linefeed 5 2 }}</div>
+        <div class="row">{{ linefeed 6 2 }}</div>
     </div>
     </body>
     </html>
