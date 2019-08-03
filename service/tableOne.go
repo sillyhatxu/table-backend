@@ -29,7 +29,7 @@ func TableOneList() ([]dto.TableOne, error) {
 }
 
 func TableOneClear() error {
-	return dao.ClearAll(1)
+	return dao.ClearAll(model.StatusDisable)
 }
 
 func TableOneAdd(addDTO dto.AddDTO) error {
