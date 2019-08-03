@@ -37,9 +37,7 @@ func SetupRouter() *gin.Engine {
 		},
 	})
 	router.LoadHTMLGlob("templates/**/*")
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"code": response.Success, "message": "OK"})
-	})
+	router.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"code": response.Success, "message": "OK"}) })
 	router.GET("", loginPage)
 	router.POST("/login", login)
 	managerGroup := router.Group("/managers")
@@ -48,12 +46,10 @@ func SetupRouter() *gin.Engine {
 		managerGroup.GET("/table-one", tableOne)
 		managerGroup.GET("/table-one2", tableOne2)
 		managerGroup.POST("/table-one/add", addTableOne)
-		managerGroup.POST("/table-one/update", updateTableOne)
-		managerGroup.POST("/table-one/export", export)
+		managerGroup.PUT("/table-one/update/:id", updateTableOne)
 		managerGroup.PUT("/table-one/get/:id", getById)
+		managerGroup.GET("/table-one/export", export)
 		managerGroup.PUT("/table-one/clear", clear)
-		managerGroup.PUT("/table-one/enable/:id", enable)
-		managerGroup.PUT("/table-one/disable/:id", disable)
 	}
 	return router
 }
@@ -136,13 +132,14 @@ func addTableOne(context *gin.Context) {
 }
 
 func updateTableOne(context *gin.Context) {
-	var requestBody dto.AddDTO
+	id := context.Param("id")
+	var requestBody dto.TableOne
 	err := context.ShouldBindJSON(&requestBody)
 	if err != nil {
 		context.JSON(http.StatusOK, response.ServerParamsValidateError(nil, err.Error()))
 		return
 	}
-	err = service.TableOneAdd(requestBody)
+	err = service.TableOneUpdate(id, requestBody)
 	if err != nil {
 		context.JSON(http.StatusOK, response.ServerError(nil, err.Error(), nil))
 		return
@@ -151,7 +148,13 @@ func updateTableOne(context *gin.Context) {
 }
 
 func getById(context *gin.Context) {
-
+	id := context.Param("id")
+	table, err := service.TableOneFindById(id)
+	if err != nil {
+		context.JSON(http.StatusOK, response.ServerError(nil, err.Error(), nil))
+		return
+	}
+	context.JSON(http.StatusOK, response.ServerSuccess(table, nil))
 }
 
 func clear(context *gin.Context) {
@@ -163,14 +166,15 @@ func clear(context *gin.Context) {
 	context.JSON(http.StatusOK, response.ServerSuccess(nil, nil))
 }
 
-func enable(context *gin.Context) {
-
-}
-
-func disable(context *gin.Context) {
-
-}
-
 func export(context *gin.Context) {
-
+	file, err := service.Export()
+	if err != nil {
+		context.JSON(http.StatusOK, response.ServerError(nil, err.Error(), nil))
+		return
+	}
+	context.Header("Content-Type", "application/octet-stream")
+	context.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s-%s.xlsx", "超龄、逾期申请表", time.Now().Format("20060102150405")))
+	context.Header("Content-Transfer-Encoding", "binary")
+	_ = file.Write(context.Writer)
+	context.JSON(http.StatusOK, response.ServerSuccess(nil, nil))
 }

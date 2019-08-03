@@ -8,6 +8,7 @@ import (
 	"github.com/sillyhatxu/table-backend/dto"
 	"github.com/sillyhatxu/table-backend/model"
 	"github.com/sillyhatxu/table-backend/utils"
+	"github.com/tealeg/xlsx"
 	"strings"
 )
 
@@ -30,6 +31,39 @@ func TableOneList() ([]dto.TableOne, error) {
 
 func TableOneClear() error {
 	return dao.ClearAll(model.StatusDisable)
+}
+
+func TableOneFindById(id string) (*dto.TableOne, error) {
+	ut, err := dao.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+	var table dto.TableOne
+	err = json.Unmarshal([]byte(ut.Content), &table)
+	if err != nil {
+		return nil, err
+	}
+	return &table, nil
+}
+
+func TableOneUpdate(id string, table dto.TableOne) error {
+	if id == "" {
+		return fmt.Errorf("ID不能为空")
+	}
+	contentJSON, err := json.Marshal(table)
+	if err != nil {
+		return err
+	}
+	if table.Identity == "" {
+		return fmt.Errorf("身份证号不能为空")
+	}
+	return dao.UpdateContent(&model.UnknownTable{
+		Id:             id,
+		Identification: table.Identity,
+		TableType:      model.TableTypeOne,
+		Status:         model.StatusEnable,
+		Content:        string(contentJSON),
+	})
 }
 
 func TableOneAdd(addDTO dto.AddDTO) error {
@@ -94,4 +128,109 @@ func TableOneAdd(addDTO dto.AddDTO) error {
 		Status:         model.StatusEnable,
 		Content:        string(contentJSON),
 	})
+}
+
+func Export() (*xlsx.File, error) {
+	file := xlsx.NewFile()
+	sheet, err := file.AddSheet("Sheet1")
+	if err != nil {
+		return nil, err
+	}
+	tableArray, err := TableOneList()
+	if err != nil {
+		return nil, err
+	}
+	row := sheet.AddRow()
+	row.SetHeightCM(1) //设置每行的高度
+	cell := addCell(row)
+	cell.SetString("姓名")
+	cell = addCell(row)
+	cell.SetString("性别")
+	cell = addCell(row)
+	cell.SetString("年龄")
+	cell = addCell(row)
+	cell.SetString("学历")
+	cell = addCell(row)
+	cell.SetString("身份证")
+	cell = addCell(row)
+	cell.SetString("手机号")
+	cell = addCell(row)
+	cell.SetString("邮箱")
+	cell = addCell(row)
+	cell.SetString("身份证地址")
+	cell = addCell(row)
+	cell.SetString("工作单位")
+	cell = addCell(row)
+	cell.SetString("单位地址")
+	cell = addCell(row)
+	cell.SetString("单位电话")
+	cell = addCell(row)
+	cell.SetString("申请原因")
+	cell = addCell(row)
+	cell.SetString("银行名称")
+	cell = addCell(row)
+	cell.SetString("收卡地址")
+	cell = addCell(row)
+	cell.SetString("申请时间")
+	cell = addCell(row)
+	cell.SetString("推荐人姓名")
+	cell = addCell(row)
+	cell.SetString("推荐人手机号")
+	cell = addCell(row)
+	cell.SetString("备注")
+	for _, table := range tableArray {
+		row := sheet.AddRow()
+		row.SetHeightCM(1)
+		cell := addCell(row)
+		cell.SetString(table.UserName)
+		cell = addCell(row)
+		cell.SetString(table.Gender)
+		cell = addCell(row)
+		cell.SetString(table.Age)
+		cell = addCell(row)
+		cell.SetString(table.Education)
+		cell = addCell(row)
+		cell.SetString(table.Identity)
+		cell = addCell(row)
+		cell.SetString(table.PhoneNumber)
+		cell = addCell(row)
+		cell.SetString(table.Email)
+		cell = addCell(row)
+		cell.SetString(table.IdentityAddress)
+		cell = addCell(row)
+		cell.SetString(table.Work)
+		cell = addCell(row)
+		cell.SetString(table.WorkAddress)
+		cell = addCell(row)
+		cell.SetString(table.WorkPhone)
+		cell = addCell(row)
+		cell.SetString(table.ReasonForApplying)
+		cell = addCell(row)
+		cell.SetString(table.BankName)
+		cell = addCell(row)
+		cell.SetString(table.ReceiveAddress)
+		cell = addCell(row)
+		cell.SetString(table.ApplyTime)
+		cell = addCell(row)
+		cell.SetString(table.ReferrerName)
+		cell = addCell(row)
+		cell.SetString(table.ReferrerPhoneNumber)
+		cell = addCell(row)
+		cell.SetString(table.Remark)
+	}
+	err = file.Save("file.xlsx")
+	if err != nil {
+		return nil, err
+	}
+	return file, nil
+}
+
+func addCell(row *xlsx.Row) *xlsx.Cell {
+	cell := row.AddCell()
+	style := xlsx.NewStyle()
+	style.Border = *xlsx.NewBorder("thin", "thin", "thin", "thin")
+	style.ApplyBorder = true
+	style.ApplyFill = true
+	cell.SetStyle(style)
+	return cell
 }

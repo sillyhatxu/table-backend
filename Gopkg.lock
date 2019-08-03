@@ -195,6 +195,14 @@
   version = "v1.3.0"
 
 [[projects]]
+  digest = "1:e60f2f1cd2e8dfdea48c2440c303d103266e754ab1d8b75796a4e4caddb7a68c"
+  name = "github.com/tealeg/xlsx"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "8be35264fa75a1bbe954ce51eba04f273e2c59e5"
+  version = "v1.0.3"
+
+[[projects]]
   digest = "1:5a1cf4e370bc86137b58da2ae065e76526d32b11f62a7665f36dbd5f41fa95ff"
   name = "github.com/ugorji/go"
   packages = ["codec"]
@@ -262,6 +270,7 @@
     "github.com/sillyhatxu/convenient-utils/uuid",
     "github.com/sirupsen/logrus",
     "github.com/stretchr/testify/assert",
+    "github.com/tealeg/xlsx",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
