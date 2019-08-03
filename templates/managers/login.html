@@ -57,20 +57,11 @@
             <h1 class="h3 mb-3 font-weight-normal">在线填表系统</h1>
         </div>
         <div class="form-label-group">
-            <input type="text" id="loginName" class="form-control" placeholder="账号" required autofocus value="{{ .data.Data.LoginName }}">
+            <input type="text" id="loginName" class="form-control" placeholder="账号" required autofocus>
             <label for="inputLoginName">请输入账号</label>
         </div>
-        {{/*<div class="form-label-group">*/}}
-        {{/*<h3>{{ .ctx }}</h3>*/}}
-        {{/*<h3>{{ .environment }}</h3>*/}}
-        {{/*<h3>{{ .data.Code }}</h3>*/}}
-        {{/*<h3>{{ .data.Msg }}</h3>*/}}
-        {{/*<h3>{{ .data.Data }}</h3>*/}}
-        {{/*<h3>{{ .data.Data.LoginName }}</h3>*/}}
-        {{/*<h3>{{ .data.Data.Password }}</h3>*/}}
-        {{/*</div>*/}}
         <div class="form-label-group">
-            <input type="password" id="password" class="form-control" placeholder="密码" required autofocus value="{{ .data.Data.Password }}">
+            <input type="password" id="password" class="form-control" placeholder="密码" required autofocus>
             <label for="inputPassword">请输入密码</label>
         </div>
         <button type="button" class="btn btn-lg btn-primary btn-block" onclick="login()">登录</button>

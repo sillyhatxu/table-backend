@@ -23,12 +23,8 @@ func SetupRouter() *gin.Engine {
 	router := gin.Default()
 	router.Static("/assets", "./assets")
 	router.SetFuncMap(template.FuncMap{
-		"ctx": func() string {
-			return "http://localhost:8080"
-		},
-		"environment": func() string {
-			return "dev"
-		},
+		"ctx":         func() string { return config.Conf.Http.Host },
+		"environment": func() string { return config.Conf.Http.Environment },
 		"formatAsDate": func(t time.Time) string {
 			year, month, day := t.Date()
 			return fmt.Sprintf("%d%02d/%02d", year, month, day)
@@ -44,7 +40,7 @@ func SetupRouter() *gin.Engine {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"code": response.Success, "message": "OK"})
 	})
-	router.GET("/login", loginPage)
+	router.GET("", loginPage)
 	router.POST("/login", login)
 	managerGroup := router.Group("/managers")
 	{
@@ -55,6 +51,7 @@ func SetupRouter() *gin.Engine {
 		managerGroup.POST("/table-one/update", updateTableOne)
 		managerGroup.POST("/table-one/export", export)
 		managerGroup.PUT("/table-one/get/:id", getById)
+		managerGroup.PUT("/table-one/clear", clear)
 		managerGroup.PUT("/table-one/enable/:id", enable)
 		managerGroup.PUT("/table-one/disable/:id", disable)
 	}
@@ -155,6 +152,15 @@ func updateTableOne(context *gin.Context) {
 
 func getById(context *gin.Context) {
 
+}
+
+func clear(context *gin.Context) {
+	err := service.TableOneClear()
+	if err != nil {
+		context.JSON(http.StatusOK, response.ServerError(nil, err.Error(), nil))
+		return
+	}
+	context.JSON(http.StatusOK, response.ServerSuccess(nil, nil))
 }
 
 func enable(context *gin.Context) {

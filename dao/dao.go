@@ -37,6 +37,16 @@ func UpdateStatus(ut *model.UnknownTable) error {
 	return err
 }
 
+const clearAllSQL = `
+update unknown_table set status = ?
+`
+
+func ClearAll(status int) error {
+	logrus.Infof("ClearAll")
+	_, err := mysqlclient.Client.Update(clearAllSQL, status)
+	return err
+}
+
 const findByIdSQL = `
 select * from unknown_table where id = ?
 `

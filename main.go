@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/BurntSushi/toml"
 	"github.com/sillyhatxu/convenient-utils/envconfig"
+	"github.com/sillyhatxu/convenient-utils/logconfig"
 	"github.com/sillyhatxu/convenient-utils/mysqlclient"
 	"github.com/sillyhatxu/table-backend/api"
 	"github.com/sillyhatxu/table-backend/config"
@@ -19,16 +20,16 @@ func init() {
 			logrus.Panicf("unmarshal toml object error. %v", err)
 		}
 	})
-	//logConfig := logconfig.NewLogConfig(
-	//	//	logrus.InfoLevel, true,
-	//	//	config.Conf.Log.Project,
-	//	//	config.Conf.Log.Module,
-	//	//	config.Conf.Log.OpenLogstash,
-	//	//	config.Conf.Log.LogstashAddress,
-	//	//	config.Conf.Log.OpenLogfile,
-	//	//	config.Conf.Log.FilePath,
-	//	//)
-	//	//logConfig.InitialLogConfig()
+	logConfig := logconfig.NewLogConfig(
+		logrus.InfoLevel, true,
+		config.Conf.Log.Project,
+		config.Conf.Log.Module,
+		config.Conf.Log.OpenLogstash,
+		config.Conf.Log.LogstashAddress,
+		config.Conf.Log.OpenLogfile,
+		config.Conf.Log.FilePath,
+	)
+	logConfig.InitialLogConfig()
 }
 
 func main() {

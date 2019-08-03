@@ -38,6 +38,39 @@
                     console.log(error);
                 });
             }
+
+            function exportTable() {
+                alert("正在开发")
+            }
+
+            function clearTable() {
+                if (!confirm("请按按钮")) {
+                    return
+                }
+                fetch('{{ ctx }}' + "/managers/table-one/clear", {
+                    credentials: 'include',//send cookie
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "PUT",
+                }).then(function (response) {
+                    var contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    }
+                    throw new TypeError("Oops, we haven't got JSON!");
+                }).then(function (result) {
+                    if (result.code === 1) {
+                        alert(result.message);
+                        window.location.href = "{{ ctx }}/managers/table-one";
+                    } else {
+                        alert(result.message);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
         </script>
     </head>
     <body>
@@ -54,7 +87,8 @@
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModalLong">
                             新增记录
                         </button>
-                        <button type="button" class="btn btn-link">清空表格</button>
+                        <button type="button" class="btn btn-primary" onclick="exportTable()">下载表格</button>
+                        <button type="button" class="btn btn-link" onclick="clearTable()">清空表格</button>
                     </p>
                 </div>
 

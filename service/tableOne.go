@@ -28,6 +28,10 @@ func TableOneList() ([]dto.TableOne, error) {
 	return resultArray, nil
 }
 
+func TableOneClear() error {
+	return dao.ClearAll(1)
+}
+
 func TableOneAdd(addDTO dto.AddDTO) error {
 	if addDTO.Content == "" {
 		return fmt.Errorf("add table one error. content is null")
