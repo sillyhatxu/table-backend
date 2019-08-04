@@ -9,22 +9,23 @@ import (
 	"github.com/sillyhatxu/table-backend/model"
 	"github.com/sillyhatxu/table-backend/utils"
 	"github.com/tealeg/xlsx"
+	"strconv"
 	"strings"
 )
 
-func TableOneList() ([]dto.TableOne, error) {
+func TableOneList() ([]dto.TableOneDTO, error) {
 	array, err := dao.FindByTableType(model.TableTypeOne)
 	if err != nil {
 		return nil, err
 	}
-	var resultArray []dto.TableOne
+	var resultArray []dto.TableOneDTO
 	for _, ut := range array {
 		var table dto.TableOne
 		err := json.Unmarshal([]byte(ut.Content), &table)
 		if err != nil {
 			return nil, err
 		}
-		resultArray = append(resultArray, table)
+		resultArray = append(resultArray, *&dto.TableOneDTO{Id: ut.Id, TableOne: table})
 	}
 	return resultArray, nil
 }
@@ -130,6 +131,93 @@ func TableOneAdd(addDTO dto.AddDTO) error {
 	})
 }
 
+func ExportExtra() (*xlsx.File, error) {
+	file := xlsx.NewFile()
+	sheet, err := file.AddSheet("Sheet1")
+	if err != nil {
+		return nil, err
+	}
+	tableArray, err := TableOneList()
+	if err != nil {
+		return nil, err
+	}
+	row := sheet.AddRow()
+	row.SetHeightCM(1) //设置每行的高度
+	cell := addCell(row)
+	cell.SetString("序号")
+	cell = addCell(row)
+	cell.SetString("职务")
+	cell = addCell(row)
+	cell.SetString("姓名")
+	cell = addCell(row)
+	cell.SetString("性别")
+	cell = addCell(row)
+	cell.SetString("年龄")
+	cell = addCell(row)
+	cell.SetString("身份证号")
+	cell = addCell(row)
+	cell.SetString("省份")
+	cell = addCell(row)
+	cell.SetString("手机号码")
+	cell = addCell(row)
+	cell.SetString("推荐人")
+	cell = addCell(row)
+	cell.SetString("推荐人手机号")
+	cell = addCell(row)
+	cell.SetString("无智能手机超龄人员")
+	cell = addCell(row)
+	cell.SetString("备注")
+	for i, table := range tableArray {
+		row := sheet.AddRow()
+		row.SetHeightCM(1)
+		cell := addCell(row)
+		cell.SetString(strconv.Itoa(i + 1))
+		cell = addCell(row)
+		cell.SetString("会员")
+		cell = addCell(row)
+		cell.SetString(table.TableOne.UserName)
+		cell = addCell(row)
+		cell.SetString(table.TableOne.Gender)
+		cell = addCell(row)
+		cell.SetString(table.TableOne.Age)
+		cell = addCell(row)
+		cell.SetString(table.TableOne.Identity)
+		cell = addCell(row)
+		cell.SetString(getProvince(table.TableOne.IdentityAddress))
+		cell = addCell(row)
+		cell.SetString(table.TableOne.PhoneNumber)
+		cell = addCell(row)
+		cell.SetString(table.TableOne.ReferrerName)
+		cell = addCell(row)
+		cell.SetString(table.TableOne.ReferrerPhoneNumber)
+		cell = addCell(row)
+		cell.SetString("")
+		cell = addCell(row)
+		cell.SetString("")
+	}
+	return file, nil
+}
+
+func getProvince(identityAddress string) string {
+	if strings.Contains(identityAddress, "北京") {
+		return "北京"
+	} else if strings.Contains(identityAddress, "上海") {
+		return "上海"
+	} else if strings.Contains(identityAddress, "天津") {
+		return "天津"
+	} else if strings.Contains(identityAddress, "重庆") {
+		return "重庆"
+	} else if strings.Contains(identityAddress, "省") {
+		identityAddressRunes := []rune(identityAddress)
+		endIndex := strings.Index(identityAddress, "省")
+		prefix := []byte(identityAddress)[0:endIndex]
+		result := []rune(string(prefix))
+		identityAddressSubstring := string(identityAddressRunes[0:len(result)])
+		return string(identityAddressSubstring)
+	}
+	return identityAddress
+}
+
 func Export() (*xlsx.File, error) {
 	file := xlsx.NewFile()
 	sheet, err := file.AddSheet("Sheet1")
@@ -143,6 +231,8 @@ func Export() (*xlsx.File, error) {
 	row := sheet.AddRow()
 	row.SetHeightCM(1) //设置每行的高度
 	cell := addCell(row)
+	cell.SetString("序号")
+	cell = addCell(row)
 	cell.SetString("姓名")
 	cell = addCell(row)
 	cell.SetString("性别")
@@ -151,11 +241,11 @@ func Export() (*xlsx.File, error) {
 	cell = addCell(row)
 	cell.SetString("学历")
 	cell = addCell(row)
-	cell.SetString("身份证")
+	cell.SetString("身份证号")
 	cell = addCell(row)
 	cell.SetString("手机号")
 	cell = addCell(row)
-	cell.SetString("邮箱")
+	cell.SetString("邮箱号")
 	cell = addCell(row)
 	cell.SetString("身份证地址")
 	cell = addCell(row)
@@ -173,54 +263,52 @@ func Export() (*xlsx.File, error) {
 	cell = addCell(row)
 	cell.SetString("申请时间")
 	cell = addCell(row)
-	cell.SetString("推荐人姓名")
+	cell.SetString("推荐人")
 	cell = addCell(row)
 	cell.SetString("推荐人手机号")
 	cell = addCell(row)
 	cell.SetString("备注")
-	for _, table := range tableArray {
+	for i, table := range tableArray {
 		row := sheet.AddRow()
 		row.SetHeightCM(1)
 		cell := addCell(row)
-		cell.SetString(table.UserName)
+		cell.SetString(strconv.Itoa(i + 1))
 		cell = addCell(row)
-		cell.SetString(table.Gender)
+		cell.SetString(table.TableOne.UserName)
 		cell = addCell(row)
-		cell.SetString(table.Age)
+		cell.SetString(table.TableOne.Gender)
 		cell = addCell(row)
-		cell.SetString(table.Education)
+		cell.SetString(table.TableOne.Age)
 		cell = addCell(row)
-		cell.SetString(table.Identity)
+		cell.SetString(table.TableOne.Education)
 		cell = addCell(row)
-		cell.SetString(table.PhoneNumber)
+		cell.SetString(table.TableOne.Identity)
 		cell = addCell(row)
-		cell.SetString(table.Email)
+		cell.SetString(table.TableOne.PhoneNumber)
 		cell = addCell(row)
-		cell.SetString(table.IdentityAddress)
+		cell.SetString(table.TableOne.Email)
 		cell = addCell(row)
-		cell.SetString(table.Work)
+		cell.SetString(table.TableOne.IdentityAddress)
 		cell = addCell(row)
-		cell.SetString(table.WorkAddress)
+		cell.SetString(table.TableOne.Work)
 		cell = addCell(row)
-		cell.SetString(table.WorkPhone)
+		cell.SetString(table.TableOne.WorkAddress)
 		cell = addCell(row)
-		cell.SetString(table.ReasonForApplying)
+		cell.SetString(table.TableOne.WorkPhone)
 		cell = addCell(row)
-		cell.SetString(table.BankName)
+		cell.SetString(table.TableOne.ReasonForApplying)
 		cell = addCell(row)
-		cell.SetString(table.ReceiveAddress)
+		cell.SetString(table.TableOne.BankName)
 		cell = addCell(row)
-		cell.SetString(table.ApplyTime)
+		cell.SetString(table.TableOne.ReceiveAddress)
 		cell = addCell(row)
-		cell.SetString(table.ReferrerName)
+		cell.SetString(table.TableOne.ApplyTime)
 		cell = addCell(row)
-		cell.SetString(table.ReferrerPhoneNumber)
+		cell.SetString(table.TableOne.ReferrerName)
 		cell = addCell(row)
-		cell.SetString(table.Remark)
-	}
-	err = file.Save("file.xlsx")
-	if err != nil {
-		return nil, err
+		cell.SetString(table.TableOne.ReferrerPhoneNumber)
+		cell = addCell(row)
+		cell.SetString(table.TableOne.Remark)
 	}
 	return file, nil
 }

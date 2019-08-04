@@ -23,8 +23,13 @@ type logConf struct {
 	LogstashAddress string `toml:"logstash_address"`
 }
 
+type resources struct {
+	FileFolder string `toml:"file_folder"`
+}
+
 type config struct {
-	Http    http    `toml:"http"`
-	Log     logConf `toml:"log_conf"`
-	MysqlDB mysqlDB `toml:"mysql_db"`
+	Http      http      `toml:"http"`
+	Log       logConf   `toml:"log_conf"`
+	MysqlDB   mysqlDB   `toml:"mysql_db"`
+	Resources resources `toml:"resources"`
 }

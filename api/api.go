@@ -49,6 +49,7 @@ func SetupRouter() *gin.Engine {
 		managerGroup.PUT("/table-one/update/:id", updateTableOne)
 		managerGroup.PUT("/table-one/get/:id", getById)
 		managerGroup.GET("/table-one/export", export)
+		managerGroup.GET("/table-one/export-extra", exportExtra)
 		managerGroup.PUT("/table-one/clear", clear)
 	}
 	return router
@@ -163,6 +164,19 @@ func clear(context *gin.Context) {
 		context.JSON(http.StatusOK, response.ServerError(nil, err.Error(), nil))
 		return
 	}
+	context.JSON(http.StatusOK, response.ServerSuccess(nil, nil))
+}
+
+func exportExtra(context *gin.Context) {
+	file, err := service.ExportExtra()
+	if err != nil {
+		context.JSON(http.StatusOK, response.ServerError(nil, err.Error(), nil))
+		return
+	}
+	context.Header("Content-Type", "application/octet-stream")
+	context.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s-%s.xlsx", "花名册", time.Now().Format("20060102150405")))
+	context.Header("Content-Transfer-Encoding", "binary")
+	_ = file.Write(context.Writer)
 	context.JSON(http.StatusOK, response.ServerSuccess(nil, nil))
 }
 

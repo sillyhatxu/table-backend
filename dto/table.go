@@ -30,3 +30,8 @@ type TableOne struct {
 	ReferrerPhoneNumber string `json:"referrer_phone_number"`
 	Remark              string `json:"remark"`
 }
+
+type TableOneDTO struct {
+	Id       string   `json:"id"`
+	TableOne TableOne `json:"table_one"`
+}

@@ -38,9 +38,57 @@
                     console.log(error);
                 });
             }
+            function getByIndex(index) {
+                // var from = document.getElementById();
+                var formElement = document.querySelector("#table-one-detail-form-"+index);
+                var formData = new FormData(formElement);
+                const data = {};
+                for (const pair of formData) {
+                    var key = "update-"+pair[0];
+                    var value = pair[1];
+                    document.getElementById(key).value = value;
+                }
+            }
+
+            function update() {
+                var formElement = document.querySelector("#table-one-detail-form-update");
+                var formData = new FormData(formElement);
+                const data = {};
+                for (const pair of formData) {
+                    data[pair[0]] = pair[1];
+                }
+                var id = document.getElementById("update-id");
+                fetch("{{ ctx }}/managers/table-one/update/"+id.value, {
+                    credentials: 'include',//send cookie
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "PUT",
+                    body: JSON.stringify(data)
+                }).then(function (response) {
+                    var contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    }
+                    throw new TypeError("Oops, we haven't got JSON!");
+                }).then(function (result) {
+                    if (result.code === 1) {
+                        alert(result.message);
+                        window.location.href = "{{ ctx }}/managers/table-one";
+                    } else {
+                        alert(result.message);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
 
             function exportTable() {
                 window.location.href = "{{ ctx }}/managers/table-one/export";
+            }
+            function exportTableExtra() {
+                window.location.href = "{{ ctx }}/managers/table-one/export-extra";
             }
 
             function clearTable() {
@@ -88,6 +136,7 @@
                             新增记录
                         </button>
                         <button type="button" class="btn btn-primary" onclick="exportTable()">下载表格</button>
+                        <button type="button" class="btn btn-primary" onclick="exportTableExtra()">下载花名册</button>
                         <button type="button" class="btn btn-link" onclick="clearTable()">清空表格</button>
                     </p>
                 </div>
@@ -99,118 +148,140 @@
                             {{/*<div class="card-header">*/}}
                                 {{/*<h4 class="my-0 font-weight-normal">L: 超龄、逾期申请表:</h4>*/}}
                             {{/*</div>*/}}
+                            <form id="table-one-detail-form-{{$index}}">
+                                <input type="hidden" class="form-control" id="id" name="id" value="{{$element.Id}}">
+                                <input type="hidden" class="form-control" id="userName" name="userName" value="{{$element.TableOne.UserName}}">
+                                <input type="hidden" class="form-control" id="gender" name="gender" value="{{$element.TableOne.Gender}}">
+                                <input type="hidden" class="form-control" id="age" name="age" value="{{$element.TableOne.Age}}">
+                                <input type="hidden" class="form-control" id="education" name="education" value="{{$element.TableOne.Education}}">
+                                <input type="hidden" class="form-control" id="identity" name="identity" value="{{$element.TableOne.Identity}}">
+                                <input type="hidden" class="form-control" id="phoneNumber" name="phoneNumber" value="{{$element.TableOne.PhoneNumber}}">
+                                <input type="hidden" class="form-control" id="email" name="email" value="{{$element.TableOne.Email}}">
+                                <input type="hidden" class="form-control" id="identityAddress" name="identityAddress" value="{{$element.TableOne.IdentityAddress}}">
+                                <input type="hidden" class="form-control" id="work" name="work" value="{{$element.TableOne.Work}}">
+                                <input type="hidden" class="form-control" id="workAddress" name="workAddress" value="{{$element.TableOne.WorkAddress}}">
+                                <input type="hidden" class="form-control" id="workPhone" name="workPhone" value="{{$element.TableOne.WorkPhone}}">
+                                <input type="hidden" class="form-control" id="reasonForApplying" name="reasonForApplying" value="{{$element.TableOne.ReasonForApplying}}">
+                                <input type="hidden" class="form-control" id="bankName" name="bankName" value="{{$element.TableOne.BankName}}">
+                                <input type="hidden" class="form-control" id="receiveAddress" name="receiveAddress" value="{{$element.TableOne.ReceiveAddress}}">
+                                <input type="hidden" class="form-control" id="applyTime" name="applyTime" value="{{$element.TableOne.ApplyTime}}">
+                                <input type="hidden" class="form-control" id="referrerName" name="referrerName" value="{{$element.TableOne.ReferrerName}}">
+                                <input type="hidden" class="form-control" id="referrerPhoneNumber" name="referrerPhoneNumber" value="{{$element.TableOne.ReferrerPhoneNumber}}">
+                                <input type="hidden" class="form-control" id="remark" name="remark" value="{{$element.TableOne.Remark}}">
+                            </form>
+
                             <div class="card-body">
                                 <ul class="list-unstyled mt-3 mb-4">
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">姓名:</p>
-                                            <p class="text-left text-primary">{{$element.UserName}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.UserName}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">性别:</p>
-                                            <p class="text-left text-primary">{{$element.Gender}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.Gender}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">年龄:</p>
-                                            <p class="text-left text-primary">{{$element.Age}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.Age}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">学历:</p>
-                                            <p class="text-left text-primary">{{$element.Education}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.Education}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">身份证号:</p>
-                                            <p class="text-left text-primary">{{$element.Identity}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.Identity}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">手机号:</p>
-                                            <p class="text-left text-primary">{{$element.PhoneNumber}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.PhoneNumber}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">邮箱:</p>
-                                            <p class="text-left text-primary">{{$element.Email}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.Email}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">身份证地址:</p>
-                                            <p class="text-left text-primary">{{$element.IdentityAddress}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.IdentityAddress}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">工作单位:</p>
-                                            <p class="text-left text-primary">{{$element.Work}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.Work}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">单位地址:</p>
-                                            <p class="text-left text-primary">{{$element.WorkAddress}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.WorkAddress}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">单位电话:</p>
-                                            <p class="text-left text-primary">{{$element.WorkPhone}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.WorkPhone}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">申请原因:</p>
-                                            <p class="text-left text-primary">{{$element.ReasonForApplying}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.ReasonForApplying}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">银行名称:</p>
-                                            <p class="text-left text-primary">{{$element.BankName}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.BankName}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">收卡地址:</p>
-                                            <p class="text-left text-primary">{{$element.ReceiveAddress}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.ReceiveAddress}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">申请时间:</p>
-                                            <p class="text-left text-primary">{{$element.ApplyTime}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.ApplyTime}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">推荐人姓名:</p>
-                                            <p class="text-left text-primary">{{$element.ReferrerName}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.ReferrerName}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">推荐人手机号码:</p>
-                                            <p class="text-left text-primary">{{$element.ReferrerPhoneNumber}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.ReferrerPhoneNumber}}</p>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="input-group">
                                             <p class="text-right">备注:</p>
-                                            <p class="text-left text-primary">{{$element.Remark}}</p>
+                                            <p class="text-left text-primary">{{$element.TableOne.Remark}}</p>
                                         </div>
                                     </li>
                                 </ul>
-                                <button type="button" class="btn btn-lg btn-block btn-outline-primary">修改</button>
+                                <button type="button" class="btn btn-lg btn-block btn-outline-primary"  data-toggle="modal" data-target="#updateModalLong" onclick="getByIndex({{$index}})">修改</button>
                             </div>
                         </div>
                         {{ if linefeed $index 2}}
@@ -226,12 +297,12 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="addModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    <div class="modal fade" id="addModalLong" tabindex="-1" role="dialog" aria-labelledby="addModalLongTitle"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">新增记录</h5>
+                    <h5 class="modal-title" id="addModalLongTitle">新增记录</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -239,13 +310,180 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <textarea class="form-control" id="addContent" rows="15"></textarea>
+                            <textarea class="form-control" id="addContent" rows="20"></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="add()">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="add()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="updateModalLong" tabindex="-1" role="dialog" aria-labelledby="updateModalLongTitle"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLongTitle">修改记录</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="table-one-detail-form-update">
+                        <input type="hidden" class="form-control" id="update-id" name="update-id">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">姓名</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-userName" name="user_name">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">性别</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-gender" name="gender">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">年龄</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-age" name="age">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">学历</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-education" name="education">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">身份证号</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-identity" name="identity">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">手机号</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-phoneNumber" name="phone_number">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">邮箱</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-email" name="email">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">身份证地址</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-identityAddress" name="identity_address">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">工作单位</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-work" name="work">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">单位地址</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-workAddress" name="work_address">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">单位电话</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-workPhone" name="work_phone">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">申请原因</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-reasonForApplying" name="reason_for_applying">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">银行名称</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-bankName" name="bank_name">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">收卡地址</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-receiveAddress" name="receive_address">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">申请时间</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-applyTime" name="apply_time">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">推荐人姓名</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-referrerName" name="referrer_name">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">推荐人手机号码</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-referrerPhoneNumber" name="referrer_phone_number">
+                        </div>
+
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">备注</span>
+                            </div>
+                            <input type="text" aria-label="First name" class="form-control" id="update-remark" name="remark">
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="update()">保存</button>
                 </div>
             </div>
         </div>
