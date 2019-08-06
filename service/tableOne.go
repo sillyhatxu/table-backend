@@ -142,7 +142,7 @@ func ExportExtra() (*xlsx.File, error) {
 		return nil, err
 	}
 	row := sheet.AddRow()
-	row.SetHeightCM(1) //设置每行的高度
+	row.SetHeightCM(0.65) //设置每行的高度
 	cell := addCell(row)
 	cell.SetString("序号")
 	cell = addCell(row)
@@ -156,9 +156,9 @@ func ExportExtra() (*xlsx.File, error) {
 	cell = addCell(row)
 	cell.SetString("身份证号")
 	cell = addCell(row)
-	cell.SetString("省份")
-	cell = addCell(row)
 	cell.SetString("手机号码")
+	cell = addCell(row)
+	cell.SetString("省份")
 	cell = addCell(row)
 	cell.SetString("推荐人")
 	cell = addCell(row)
@@ -169,7 +169,7 @@ func ExportExtra() (*xlsx.File, error) {
 	cell.SetString("备注")
 	for i, table := range tableArray {
 		row := sheet.AddRow()
-		row.SetHeightCM(1)
+		row.SetHeightCM(0.65)
 		cell := addCell(row)
 		cell.SetString(strconv.Itoa(i + 1))
 		cell = addCell(row)
@@ -183,9 +183,9 @@ func ExportExtra() (*xlsx.File, error) {
 		cell = addCell(row)
 		cell.SetString(table.TableOne.Identity)
 		cell = addCell(row)
-		cell.SetString(getProvince(table.TableOne.IdentityAddress))
-		cell = addCell(row)
 		cell.SetString(table.TableOne.PhoneNumber)
+		cell = addCell(row)
+		cell.SetString(getProvince(table.TableOne.IdentityAddress))
 		cell = addCell(row)
 		cell.SetString(table.TableOne.ReferrerName)
 		cell = addCell(row)
@@ -229,7 +229,7 @@ func Export() (*xlsx.File, error) {
 		return nil, err
 	}
 	row := sheet.AddRow()
-	row.SetHeightCM(1) //设置每行的高度
+	row.SetHeightCM(0.65) //设置每行的高度
 	cell := addCell(row)
 	cell.SetString("序号")
 	cell = addCell(row)
@@ -270,7 +270,7 @@ func Export() (*xlsx.File, error) {
 	cell.SetString("备注")
 	for i, table := range tableArray {
 		row := sheet.AddRow()
-		row.SetHeightCM(1)
+		row.SetHeightCM(0.65)
 		cell := addCell(row)
 		cell.SetString(strconv.Itoa(i + 1))
 		cell = addCell(row)
@@ -316,6 +316,7 @@ func Export() (*xlsx.File, error) {
 func addCell(row *xlsx.Row) *xlsx.Cell {
 	cell := row.AddCell()
 	style := xlsx.NewStyle()
+	style.Font = *xlsx.NewFont(12, "Calibri")
 	style.Border = *xlsx.NewBorder("thin", "thin", "thin", "thin")
 	style.ApplyBorder = true
 	style.ApplyFill = true

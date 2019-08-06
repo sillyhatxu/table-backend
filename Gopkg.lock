@@ -163,7 +163,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:43d53fc01926a06c68303cb7691e461751a55449ed280d7b569f5746b3f75572"
+  digest = "1:2eae60068e26611a181f84fcdc19877e1dfdbf2020a23b2b92e0c05cbda56fba"
   name = "github.com/sillyhatxu/convenient-utils"
   packages = [
     "encryption/hash",
@@ -176,7 +176,7 @@
     "uuid",
   ]
   pruneopts = "UT"
-  revision = "68b443420feb7c83bb997df57a0db25b23553e74"
+  revision = "860fb40528d2a40e816ee515074bcb8a34904509"
 
 [[projects]]
   digest = "1:04457f9f6f3ffc5fea48e71d62f2ca256637dee0a04d710288e27e05c8b41976"
@@ -216,7 +216,7 @@
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "cbf593c0f2f39034e9104bbf77e2ec7c48c98fc5"
+  revision = "51ab0e2deafac1f46c46ad59cf0921be2f180c3d"
 
 [[projects]]
   digest = "1:d55e0738476edb61bb4f763f407b80df7243480b84ba46ddeda64e43c26a7136"
